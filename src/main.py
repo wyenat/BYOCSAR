@@ -1,5 +1,5 @@
 import sys
-from parsing.sbparser import Parser
+from parsing.parser import Parser
 
 parse = Parser(sys.argv)
 comp = parse.get_computer()

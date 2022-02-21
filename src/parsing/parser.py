@@ -8,7 +8,7 @@ class Parser:
     def __init__(self, argv):
         if len(argv) <= 1:
             raise Exception(
-                "You did not entered enough argument. Please enter a .sb file."
+                "You did not entered enough argument. Please enter a .sr file."
             )
         self.file = open(argv[1]).read().split("\n")
         self.computer = None
