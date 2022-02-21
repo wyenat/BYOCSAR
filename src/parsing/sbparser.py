@@ -51,7 +51,7 @@ class Parser:
     def init_stack(self):
         for f in self.file[1:]:
             for i in f.split():
-                self.computer.stack.add(int(i, 16))
+                self.computer.stack.add(i)
 
     def get_computer(self):
         return self.computer

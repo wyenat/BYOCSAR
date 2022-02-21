@@ -6,59 +6,62 @@ def get_value(value):
     return int("0x" + value[1], 16) % 8
 
 
-def exec(value, computer):
-    if value:
+def exec(value: str, computer):
+    if int(str(value), 16) != 0:
         computer.execute()
 
 
-def add(value, computer):
-    computer.registers[get_register(value)].value += get_value(value)
+def add(value: str, computer):
+    computer.registers[get_register(value)].value = "{:02X}".format(
+        int(computer.registers[get_register(value)].value, 16)
+        + int(get_value(value), 16)
+    )
 
 
-def mult(value, computer):
+def mult(value: str, computer):
     computer.registers[get_register(value)].value *= get_value(value)
 
 
-def prin(value, computer):
-    computer.toprint += chr(value)
+def prin(value: str, computer):
+    computer.toprint += chr(int(value, 16))
 
 
-def inv(value, computer):
+def inv(value: str, computer):
     pass
 
 
-def inpu(value, computer):
+def inpu(value: str, computer):
     pass
 
 
-def pushN(value, computer):
+def pushN(value: str, computer):
     pass
 
 
-def rev(value, computer):
+def rev(value: str, computer):
     if value:
         computer.stack.reverse()
 
 
-def skip(value, computer):
+def skip(value: str, computer):
     computer.toskip = value
 
 
-def mod(value, computer):
+def mod(value: str, computer):
     computer.registers[get_register(value)].value %= get_value(value)
 
 
-def div(value, computer):
+def div(value: str, computer):
     computer.registers[get_register(value)].value = computer.registers[
         get_register(value)
     ].value // get_value(value)
 
 
-def noop(value, computer):
+def noop(value: str, computer):
     pass
 
 
-def copyS(value, computer):
+def copyS(value: str, computer):
     pass
 
 

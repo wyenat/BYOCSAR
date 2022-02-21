@@ -13,5 +13,5 @@ class Stack:
         return s
 
     def __str__(self) -> str:
-        return "".join("{:02X} ".format(i) for i in self.stack)
+        return "".join(f"{i} " for i in self.stack)
 

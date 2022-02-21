@@ -3,6 +3,7 @@ from computer.stack import Stack
 from computer.functions import mapping, noop
 import sys
 import time
+import typing
 
 
 class Computer:
@@ -23,6 +24,7 @@ class Computer:
         while self.stack.stack:
             val = self.stack.read()
             self.registers[0].get(val)
+            self.pretty_print()
         print(self.toprint)
 
     def execute(self):
@@ -47,8 +49,10 @@ class Computer:
         for e, r in enumerate(self.registers):
             reg_nums += "R" + "{:02}".format(e + 1) + " |"
             reg_func += r.name.ljust(4, " ") + "|"
-            reg_vals += "{:02X}".format(r.value) + " | "
+            reg_vals += "{:02X}".format(int(str(r.value), 16)) + " | "
         print(reg_nums + "\n" + reg_func + "\n" + reg_vals)
         print("#" * 80 + "\n#" + " " * 34 + "STACK DUMP" + " " * 34 + "#\n" + "#" * 80)
         print(self.stack)
-        time.sleep(1)
+        print("#" * 80 + "\n#" + " " * 34 + "STDOUT FLU" + " " * 34 + "#\n" + "#" * 80)
+        print(self.toprint)
+        time.sleep(0.3)
