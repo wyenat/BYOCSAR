@@ -2,55 +2,53 @@ from computer.register import Register
 from computer.stack import Stack
 from computer.functions import mapping, noop
 import sys
+import time
+
 
 class Computer:
-    def __init__(self):
+    def __init__(self, nb_reg):
         previous = None
         self.registers = []
-        for i in range(16):
-            register = Register(noop, previous)
+        for i in range(nb_reg):
+            register = Register(noop, self)
+            if previous != None:
+                previous.set_next(register)
             previous = register
             self.registers.append(register)
         self.toskip = 0
         self.toprint = ""
         self.stack = Stack()
 
-
-    def read(self, val):
-        for v in val.split(" "):
-            if v=="SP":
-                self.stack.add(v)
-            else:
-                self.stack.add(int(v, 16))
-        while len(self.stack.stack):
-            self.r1.get(self.stack.read())
-            if self.r9.value !=0:
-                self.r9.consume()
+    def read(self):
+        while self.stack.stack:
+            val = self.stack.read()
+            self.registers[0].get(val)
         print(self.toprint)
 
-    def pushR7(self, val):
-        if val>0:
-            i = 0
-            while val >0:
-                self.stack.add(self.stack.stack[i])
-                i+=1
-                val-=1
-        elif val < 0:
-            i = len(self.stack.stack) -1
-            while val < 0:
-                val+=1
-                self.stack.add(self.stack.stack[i])
-                if (i<0):
-                    i = len(self.stack.stack) -1
-
-    def execute(self, val):
-        for e, r in enumerate(self.registers[1:]):
+    def execute(self):
+        for e, r in enumerate(self.registers):
             if self.toskip != 0:
                 self.toskip -= 1
             else:
-                print(f"\nR{16-e} executes {r.value}", file=sys.stderr)
-                r.consume()
+                print(f"\nR{e+1} executes {r.value} with {r.name}", file=sys.stderr)
+                if r.name != "exec":
+                    r.consume()
+                else:
+                    r.value = 0
 
     def pretty_print(self):
-        for e,r in enumerate(self.registers):
-            print(f"R{16-e}:{r.value}",file=sys.stderr)
+        print("\n" * 24)
+        print(
+            "#" * 80 + "\n#" + " " * 32 + "REGISTERS DUMP" + " " * 32 + "#\n" + "#" * 80
+        )
+        reg_nums = ""
+        reg_func = ""
+        reg_vals = " "
+        for e, r in enumerate(self.registers):
+            reg_nums += "R" + "{:02}".format(e + 1) + " |"
+            reg_func += r.name.ljust(4, " ") + "|"
+            reg_vals += "{:02X}".format(r.value) + " | "
+        print(reg_nums + "\n" + reg_func + "\n" + reg_vals)
+        print("#" * 80 + "\n#" + " " * 34 + "STACK DUMP" + " " * 34 + "#\n" + "#" * 80)
+        print(self.stack)
+        time.sleep(1)
