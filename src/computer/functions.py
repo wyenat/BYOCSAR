@@ -62,7 +62,7 @@ def noop(value: str, computer):
 
 
 def copyS(value: str, computer):
-    pass
+    computer.stack.stack += computer.stack.stack[: int(value, 16)]
 
 
 mapping = {

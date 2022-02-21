@@ -7,7 +7,7 @@ import typing
 
 
 class Computer:
-    def __init__(self, nb_reg):
+    def __init__(self, nb_reg, verbose):
         previous = None
         self.registers = []
         for i in range(nb_reg):
@@ -19,6 +19,7 @@ class Computer:
         self.toskip = 0
         self.toprint = ""
         self.stack = Stack()
+        self.verbose = verbose
 
     def read(self):
         while self.stack.stack:
@@ -32,13 +33,14 @@ class Computer:
             if self.toskip != 0:
                 self.toskip -= 1
             else:
-                print(f"\nR{e+1} executes {r.value} with {r.name}", file=sys.stderr)
                 if r.name != "exec":
                     r.consume()
                 else:
                     r.value = 0
 
     def pretty_print(self):
+        if not self.verbose:
+            return
         print("\n" * 24)
         print(
             "#" * 80 + "\n#" + " " * 32 + "REGISTERS DUMP" + " " * 32 + "#\n" + "#" * 80

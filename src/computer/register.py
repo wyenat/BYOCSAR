@@ -15,6 +15,7 @@ class Register:
     def consume(self):
         self.action(self.value, self.comp)
         self.value = "00"
+        self.comp.pretty_print()
 
     def get(self, val):
         tmp = self.value

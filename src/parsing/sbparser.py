@@ -12,6 +12,9 @@ class Parser:
             )
         self.file = open(argv[1]).read().split("\n")
         self.computer = None
+        self.verbose = False
+        if "-v" in argv:
+            self.verbose = True
         self.check()
         self.init_registers()
         self.init_stack()
@@ -42,9 +45,8 @@ class Parser:
 
     def init_registers(self):
         nb_reg = len(self.file[0].split())
-        self.computer = Computer(nb_reg)
+        self.computer = Computer(nb_reg, self.verbose)
         for i in self.file[0].split():
-            print(f"i={i}, Register {get_register(i)} with : {i[1]}")
             self.computer.registers[get_register(i)].action = mapping[i[1]]
             self.computer.registers[get_register(i)].name = name_map[i[1]]
 
