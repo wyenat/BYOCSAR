@@ -68,7 +68,16 @@ def prin(value: str, computer):
 
 
 def inpu(value: str, computer):
-    pass
+    if int(value, 16) != 0:
+        v = input().upper()
+        auth_hex = [hex(i)[2:].zfill(2).upper() for i in range(256)]
+        auth_ascii = "?!ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        while not v in auth_hex and not v in ascii:
+            print("This is not a 8 bits hex or a ASCII...")
+            v = input().upper()
+            if v in auth_ascii:
+                v = hex(ord(v))[2:]
+        computer.stack.add(v)
 
 
 def pushN(value: str, computer):
@@ -89,10 +98,6 @@ def rev(value: str, computer):
 
 def skip(value: str, computer):
     computer.toskip = value
-
-
-def copyS(value: str, computer):
-    computer.stack.stack += computer.stack.stack[: int(value, 16)]
 
 
 mapping = {

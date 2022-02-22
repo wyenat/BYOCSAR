@@ -34,9 +34,14 @@ class Parser:
             )
 
         # 2 check that both all data is hexa
-        autorized = [hex(i)[2:].zfill(2).upper() for i in range(256)]
+        auth_hex = [hex(i)[2:].zfill(2).upper() for i in range(256)]
+        auth_ascii = "?! ABCDEFGHIJKLMNOPQRSTUVWXYZ"
         for e, s in enumerate(self.file):
-            not_ok = [i for i in s.split() if i not in autorized]
+            not_ok = [
+                i
+                for i in s.split()
+                if i not in auth_hex and i.upper() not in auth_ascii
+            ]
             if not_ok:
                 exception_text = f"The line {e+1} is ill-formed. Here is a list:"
                 for n, w in enumerate(not_ok):
@@ -47,12 +52,16 @@ class Parser:
         nb_reg = len(self.file[0].split())
         self.computer = Computer(nb_reg, self.verbose)
         for i in self.file[0].split():
+            if i.upper() in "?!ABCDEFGHIJKLMNOPQRSTUVWXYZ":
+                i = hex(ord(i.upper()))[2:]
             self.computer.registers[get_register(i)].action = mapping[i[1]]
             self.computer.registers[get_register(i)].name = name_map[i[1]]
 
     def init_stack(self):
         for f in self.file[1:]:
             for i in f.split():
+                if i.upper() in "?!ABCDEFGHIJKLMNOPQRSTUVWXYZ":
+                    i = hex(ord(i.upper()))[2:]
                 self.computer.stack.add(i)
 
     def get_computer(self):
