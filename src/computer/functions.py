@@ -12,22 +12,59 @@ def exec(value: str, computer):
 
 
 def add(value: str, computer):
-    computer.registers[get_register(value)].value = "{:02X}".format(
-        int(computer.registers[get_register(value)].value, 16)
-        + int(get_value(value), 16)
-    )
+    change_place = get_register(value)
+    if change_place == -1:
+        computer.stack.stack[-1] = "{:02X}".format(
+            int(str(computer.stack.stack[-1]), 16) + get_value(value)
+        )
+    else:
+        computer.registers[get_register(value)].value = "{:02X}".format(
+            int(str(computer.registers[get_register(value)].value), 16)
+            + get_value(value)
+        )
 
 
 def mult(value: str, computer):
-    computer.registers[get_register(value)].value *= get_value(value)
+    change_place = get_register(value)
+    if change_place == -1:
+        computer.stack.stack[-1] = "{:02X}".format(
+            int(str(computer.stack.stack[-1]), 16) * get_value(value)
+        )
+    else:
+        computer.registers[get_register(value)].value = "{:02X}".format(
+            int(str(computer.registers[get_register(value)].value), 16)
+            * get_value(value)
+        )
+
+
+def mod(value: str, computer):
+    change_place = get_register(value)
+    if change_place == -1:
+        computer.stack.stack[-1] = "{:02X}".format(
+            int(str(computer.stack.stack[-1]), 16) % get_value(value)
+        )
+    else:
+        computer.registers[get_register(value)].value = "{:02X}".format(
+            int(str(computer.registers[get_register(value)].value), 16)
+            % get_value(value)
+        )
+
+
+def div(value: str, computer):
+    change_place = get_register(value)
+    if change_place == -1:
+        computer.stack.stack[-1] = "{:02X}".format(
+            int(str(computer.stack.stack[-1]), 16) // get_value(value)
+        )
+    else:
+        computer.registers[get_register(value)].value = "{:02X}".format(
+            int(str(computer.registers[get_register(value)].value), 16)
+            // get_value(value)
+        )
 
 
 def prin(value: str, computer):
     computer.toprint += chr(int(value, 16))
-
-
-def inv(value: str, computer):
-    pass
 
 
 def inpu(value: str, computer):
@@ -35,7 +72,14 @@ def inpu(value: str, computer):
 
 
 def pushN(value: str, computer):
-    pass
+    change_place = get_register(value)
+    change_rep = get_value(value)
+    if change_place == -1:
+        change_val = computer.stack.stack[0:change_rep]
+    else:
+        change_val = [computer.registers[change_place].value for _ in range(change_rep)]
+    for v in change_val:
+        computer.stack.add(v)
 
 
 def rev(value: str, computer):
@@ -47,20 +91,6 @@ def skip(value: str, computer):
     computer.toskip = value
 
 
-def mod(value: str, computer):
-    computer.registers[get_register(value)].value %= get_value(value)
-
-
-def div(value: str, computer):
-    computer.registers[get_register(value)].value = computer.registers[
-        get_register(value)
-    ].value // get_value(value)
-
-
-def noop(value: str, computer):
-    pass
-
-
 def copyS(value: str, computer):
     computer.stack.stack += computer.stack.stack[: int(value, 16)]
 
@@ -70,15 +100,12 @@ mapping = {
     "1": add,
     "2": mult,
     "3": prin,
-    "4": inv,
     "5": inpu,
     "6": pushN,
     "7": rev,
     "8": skip,
     "9": mod,
     "A": div,
-    "B": noop,
-    "C": copyS,
 }
 
 name_map = {
@@ -86,13 +113,10 @@ name_map = {
     "1": "add",
     "2": "mult",
     "3": "prin",
-    "4": "inv",
     "5": "inpu",
     "6": "push",
     "7": "rev",
     "8": "skip",
     "9": "mod",
     "A": "div",
-    "B": "noop",
-    "C": "copy",
 }

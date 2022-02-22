@@ -1,6 +1,6 @@
 from computer.register import Register
 from computer.stack import Stack
-from computer.functions import mapping, noop
+from computer.functions import mapping, exec
 import sys
 import time
 import typing
@@ -11,7 +11,7 @@ class Computer:
         previous = None
         self.registers = []
         for i in range(nb_reg):
-            register = Register(noop, self)
+            register = Register(exec, self)
             if previous != None:
                 previous.set_next(register)
             previous = register
