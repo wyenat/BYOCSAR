@@ -1,13 +1,11 @@
 from computer.register import Register
 from computer.stack import Stack
 from computer.functions import mapping, exec
-import sys
 import time
-import typing
-
+from verbose.verbose import Verbose
 
 class Computer:
-    def __init__(self, nb_reg, verbose):
+    def __init__(self, nb_reg, verbose: Verbose):
         previous = None
         self.registers = []
         for i in range(nb_reg):
@@ -18,6 +16,7 @@ class Computer:
             self.registers.append(register)
         self.toskip = 0
         self.toprint = ""
+        self.actions = []
         self.stack = Stack()
         self.verbose = verbose
 
@@ -39,7 +38,7 @@ class Computer:
                     r.value = 0
 
     def pretty_print(self):
-        if not self.verbose:
+        if not self.verbose.flag:
             return
         print("\n" * 24)
         print(
@@ -57,4 +56,7 @@ class Computer:
         print(self.stack)
         print("#" * 80 + "\n#" + " " * 34 + "STDOUT FLU" + " " * 34 + "#\n" + "#" * 80)
         print(self.toprint)
-        time.sleep(0.3)
+        print("#" * 80 + "\n#" + " " * 34 + "ACTION    " + " " * 34 + "#\n" + "#" * 80)
+        while len(self.actions):
+            print(self.actions.pop())
+        time.sleep(self.verbose.time)

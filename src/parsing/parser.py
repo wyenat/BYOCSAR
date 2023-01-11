@@ -1,29 +1,38 @@
 from inspect import ArgInfo
 from os import error
+from verbose.verbose import Verbose
 from computer.computer import Computer
 from computer.functions import mapping, get_register, name_map
+import argparse
 
 
 class Parser:
     def __init__(self, argv):
-        if len(argv) <= 1:
-            raise Exception(
-                "You did not entered enough argument. Please enter a .sr file."
-            )
-        self.file = open(argv[1]).read().split("\n")
+        self._define_arguments()
+        self.file = open(self.parser.file).read().split("\n")
         self.computer = None
-        self.verbose = False
-        if "-v" in argv:
-            self.verbose = True
+        self.verbose = Verbose(self.parser.verbose, self.parser.time)
         self.check()
         self.init_registers()
         self.init_stack()
+
+    def _define_arguments(self):
+        parser = argparse.ArgumentParser(
+                    prog = 'BYOCSAR',
+                    description = 'Please refer to the readme for more help')
+        parser.add_argument('-f', '--file', type=str, required=True, 
+              help="sr file to compile. Please refer to README.")
+        parser.add_argument('-v','--verbose', action=argparse.BooleanOptionalAction,
+              help='Verbose flag. Prints the console to see the result.')
+        parser.add_argument('-t','--time', default=0.5, type=float,
+        help='If verbose flag is one, defines the speed between frames, in seconds.', nargs='?')
+        self.parser = parser.parse_args()
+
 
     """
     It is not so efficient (and coherent with the use of python...) to entirely
     check the code before reading it a second time but :-)
     """
-
     def check(self):
         # 1 check that there is initialisation
         if len(self.file) < 2:
